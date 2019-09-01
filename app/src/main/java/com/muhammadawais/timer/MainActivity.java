@@ -16,21 +16,29 @@ public class MainActivity extends AppCompatActivity {
     SeekBar timerSeekBar;
     Boolean counterIsActive = false;
     Button goButton;
+    CountDownTimer countDownTimer;
+
+    public void resetTimer() {
+        timerTextView.setText("0:30");
+        timerSeekBar.setProgress(30);
+        timerSeekBar.setEnabled(true);
+        countDownTimer.cancel();
+        goButton.setText("GO!");
+        counterIsActive = false;
+    }
 
     public void buttonClicked(View view) {
 
         if (counterIsActive) {
 
-            timerTextView.setText("0:30");
-            timerSeekBar.setProgress(30);
-            
+            resetTimer();
 
         } else {
             counterIsActive = true;
             timerSeekBar.setEnabled(false);
             goButton.setText("STOP!");
 
-            new CountDownTimer(timerSeekBar.getProgress() * 1000 + 100, 1000) {
+            countDownTimer = new CountDownTimer(timerSeekBar.getProgress() * 1000 + 100, 1000) {
 
                 @Override
                 public void onTick(long l) {
@@ -41,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onFinish() {
                     MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alert);
                     mediaPlayer.start();
+                    resetTimer();
                 }
 
             }.start();
